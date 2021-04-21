@@ -1,13 +1,23 @@
-// spa - useEffect
-// ssr - getServerSideProps
-// ssg - getStaticProps
+import { GetStaticProps } from "next";
 
-export default function Home(props) {
+type Episode = {
+  id: string;
+  title: string;
+  members: string;
+};
+
+type HomeProps = {
+  episodes: Episode[];
+};
+
+export default function Home(props: HomeProps) {
   return <p>Podcastr</p>;
 }
 
-export async function getStaticProps() {
-  const response = await fetch("http://localhost:3333/episodes");
+export const getStaticProps: GetStaticProps = async () => {
+  const response = await fetch(
+    "http://localhost:3333/episodes?_limit=12&_sort=published_at&_order=desc"
+  );
   const data = await response.json();
 
   return {
@@ -16,4 +26,4 @@ export async function getStaticProps() {
     },
     revalidate: 60 * 60 * 8,
   };
-}
+};
